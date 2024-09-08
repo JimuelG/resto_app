@@ -4,42 +4,59 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class RestoController : BaseApiController
+    public class RestoController(
+        IGenericRepository<Menu> menuRepo, 
+        IGenericRepository<Order> orderRepo, 
+        IGenericRepository<RawMaterial> rawMaterialRepo, 
+        IGenericRepository<Recipe> recipeRepo
+        ) : BaseApiController
     {
-        private readonly IRestoRepository _repo;
-        public RestoController(IRestoRepository repo)
+        [HttpGet("menu/{id}")]
+        public async Task<Menu> GetMenu(int id)
         {
-            _repo = repo;
+            return await menuRepo.GetByIdAsync(id);
         }
 
-        [HttpGet]
+        [HttpGet("menu")]
         public async Task<IReadOnlyList<Menu>> GetMenus()
         {
-            return await _repo.GetMenusAsync();
+            return await menuRepo.ListAllAsync();
         }
 
-        [HttpGet("menu/{id}")]
-        public async Task<Menu> GetMenuId(int id)
-        {
-            return await _repo.GetMenuByIdAsync(id);
-        }
-
-        [HttpGet]
+        [HttpGet("order")]
         public async Task<IReadOnlyList<Order>> GetOrders()
         {
-            return await _repo.GetOrdersAsync();
+            return await orderRepo.ListAllAsync();
         }
 
-        [HttpGet]
-        public async Task<IReadOnlyList<RawMaterial>> GetRawMaterials()
+        [HttpGet("order/{id}")]
+        public async Task<Order> GetOrder(int id)
         {
-            return await _repo.GetRawMaterialsAsync();
+            return await orderRepo.GetByIdAsync(id);
         }
 
-        [HttpGet]
+        [HttpGet("recipe")]
         public async Task<IReadOnlyList<Recipe>> GetRecipes()
         {
-            return await _repo.GetRecipesAsync();
+            return await recipeRepo.ListAllAsync();
+        }
+
+        [HttpGet("recipe/{id}")]
+        public async Task<Recipe> GetRecipe(int id)
+        {
+            return await recipeRepo.GetByIdAsync(id);
+        }
+
+        [HttpGet("raw_materials")]
+        public async Task<IReadOnlyList<RawMaterial>> GetRawMaterials()
+        {
+            return await rawMaterialRepo.ListAllAsync();
+        }
+
+        [HttpGet("raw_materials/{id}")]
+        public async Task<RawMaterial> GetRawMaterial(int id)
+        {
+            return await rawMaterialRepo.GetByIdAsync(id);
         }
     }
 }
